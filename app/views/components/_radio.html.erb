@@ -1,3 +1,32 @@
+<%
+  id_prefix ||= "input-#{SecureRandom.hex(4)}"
+  items ||= []
+%>
+
 <div class="app-c-radio">
-  <h2><a href="https://github.com/alphagov/govuk_publishing_components/blob/master/docs/component_conventions.md">How to build a component</a></h2>
+  <% items.each_with_index do |item, index|
+    label_id = item[:id] ? item[:id] : "#{id_prefix}-#{index}"
+    label_hint_id = "label-hint-#{SecureRandom.hex(4)}" if item[:hint_text].present?
+  %>
+    <input
+      class="app-c-radio__input"
+      name="<%= name %>"
+      type="radio"
+      value="<%= item[:value] %>"
+      <%= "checked" if item[:checked] %>
+      <% if label_hint_id %>
+        aria-describedby="<%= label_hint_id %>"
+      <% end %>
+    >
+    <%= render "govuk_publishing_components/components/label", {
+          hint_id: label_hint_id,
+          html_for: label_id,
+          classes: 'app-c-radio__label',
+          text_classes: 'app-c-radio__label__text',
+          hint_text_classes: 'app-c-radio__label__hint',
+          hint_text: item[:hint_text],
+          text: item[:text],
+          bold: item[:bold]
+        } %>
+  <% end %>
 </div>
